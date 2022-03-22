@@ -1,10 +1,15 @@
 {
-  "name": "camilord/qrcode",
+  "name": "victorlazov/qrcode",
   "version": "1.0.0",
-  "homepage": "https://github.com/camilord/qrcode",
+  "homepage": "https://github.com/victorlazov/qrcode",
   "description": "This is PHP implementation of QR Code 2-D barcode generator. It is pure-php LGPL-licensed implementation based on C libqrencode by Kentaro Fukuchi.",
   "type": "library",
-  "keywords": ["qrcode", "php-qrcode", "qr code", "qrcode generator"],
+  "keywords": [
+    "qrcode",
+    "php-qrcode",
+    "qr code",
+    "qrcode generator"
+  ],
   "license": "MIT",
   "authors": [
     {
@@ -18,14 +23,18 @@
       "homepage": "http://megaui.net/fukuchi/works/qrencode/index.en.html"
     },
     {
-      "name": "Camilo Lozano III",
-      "email": "me@camilord.com",
-      "homepage": "https://www.camilord.com"
+      "name": "Victor Lazov",
+      "email": "victor.lazov.biz@gmail.com"
     }
   ],
+  "require": {
+    "php": "7.4",
+    "ext-gd": "*",
+    "ext-zlib": "*"
+  },
   "autoload": {
     "psr-4": {
-      "camilord\\qrcode\\": "src/"
+      "victorlazov\\qrcode\\": "src/"
     }
   }
 }
