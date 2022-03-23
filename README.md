@@ -1,9 +1,9 @@
-== USAGE ==
+# USAGE
 
 ```
 {
     "require": {
-        "camilord/qrcode": "1.*"
+        "victorlazov/qrcode": "1.*"
     }
 }
 ```
@@ -11,7 +11,7 @@
 ```
 <?php
 
-use camilord\qrcode\QRCodeCore;
+use victorlazov\qrcode\QRCodeCore;
 
 $QRCode = new QRCodeCore();
 $QRCode->png('PHP QR Code :)');
@@ -22,7 +22,7 @@ $QRCode->png('PHP QR Code :)');
 This is PHP implementation of QR Code 2-D barcode generator. It is pure-php
 LGPL-licensed implementation based on C libqrencode by Kentaro Fukuchi.
 
-== LICENSING ==
+## LICENSING
 
 Copyright (C) 2010 by Dominik Dzienia 
 
@@ -39,20 +39,7 @@ You should have received a copy of the GNU Lesser General Public License along
 with this library; if not, write to the Free Software Foundation, Inc., 51
 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 
-== INSTALATION AND USAGE ==
-
- * INSTALL file
- * http://sourceforge.net/apps/mediawiki/phpqrcode/index.php?title=Main_Page
-
-== CONTACT ==
-
-Fell free to contact me via e-mail (deltalab at poczta dot fm) or using
-folowing project pages:
-
- * http://sourceforge.net/projects/phpqrcode/
- * http://phpqrcode.sourceforge.net/
-  
-== ACKNOWLEDGMENTS ==
+## ACKNOWLEDGMENTS
 
 Based on C libqrencode library (ver. 3.1.1) 
 Copyright (C) 2006-2010 by Kentaro Fukuchi
