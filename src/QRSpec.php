@@ -1,49 +1,47 @@
 <?php
+/**
+ * PHP QR Code encoder
+ *
+ * QR Code specifications
+ *
+ * Based on libqrencode C library distributed under LGPL 2.1
+ * Copyright (C) 2006, 2007, 2008, 2009 Kentaro Fukuchi <fukuchi@megaui.net>
+ *
+ * PHP QR Code is distributed under LGPL 3
+ * Copyright (C) 2010 Dominik Dzienia <deltalab at poczta dot fm>
+ *
+ * The following data / specifications are taken from
+ * "Two dimensional symbol -- QR-code -- Basic Specification" (JIS X0510:2004)
+ *  or
+ * "Automatic identification and data capture techniques --
+ *  QR Code 2005 bar code symbology specification" (ISO/IEC 18004:2006)
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 namespace victorlazov\qrcode;
 
+class QRSpec {
+	public const QRSPEC_VERSION_MAX = 40;
+	public const QRSPEC_WIDTH_MAX = 177;
 
-/*
-* PHP QR Code encoder
-*
-* QR Code specifications
-*
-* Based on libqrencode C library distributed under LGPL 2.1
-* Copyright (C) 2006, 2007, 2008, 2009 Kentaro Fukuchi <fukuchi@megaui.net>
-*
-* PHP QR Code is distributed under LGPL 3
-* Copyright (C) 2010 Dominik Dzienia <deltalab at poczta dot fm>
-*
-* The following data / specifications are taken from
-* "Two dimensional symbol -- QR-code -- Basic Specification" (JIS X0510:2004)
-*  or
-* "Automatic identification and data capture techniques --
-*  QR Code 2005 bar code symbology specification" (ISO/IEC 18004:2006)
-*
-* This library is free software; you can redistribute it and/or
-* modify it under the terms of the GNU Lesser General Public
-* License as published by the Free Software Foundation; either
-* version 3 of the License, or any later version.
-*
-* This library is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-* Lesser General Public License for more details.
-*
-* You should have received a copy of the GNU Lesser General Public
-* License along with this library; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
-*/
+	public const QRCAP_WIDTH = 0;
+	public const QRCAP_WORDS = 1;
+	public const QRCAP_REMINDER = 2;
+	public const QRCAP_EC = 3;
 
-define( 'QRSPEC_VERSION_MAX', 40 );
-define( 'QRSPEC_WIDTH_MAX', 177 );
-
-define( 'QRCAP_WIDTH', 0 );
-define( 'QRCAP_WORDS', 1 );
-define( 'QRCAP_REMINDER', 2 );
-define( 'QRCAP_EC', 3 );
-
-class QRspec {
 
 	public static $capacity = array(
 		array( 0, 0, 0, array( 0, 0, 0, 0 ) ),
@@ -91,29 +89,29 @@ class QRspec {
 
 
 	public static function getDataLength( $version, $level ) {
-		return self::$capacity[ $version ][ QRCAP_WORDS ] - self::$capacity[ $version ][ QRCAP_EC ][ $level ];
+		return self::$capacity[ $version ][ self::QRCAP_WORDS ] - self::$capacity[ $version ][ self::QRCAP_EC ][ $level ];
 	}
 
 
 	public static function getECCLength( $version, $level ) {
-		return self::$capacity[ $version ][ QRCAP_EC ][ $level ];
+		return self::$capacity[ $version ][ self::QRCAP_EC ][ $level ];
 	}
 
 
 	public static function getWidth( $version ) {
-		return self::$capacity[ $version ][ QRCAP_WIDTH ];
+		return self::$capacity[ $version ][ self::QRCAP_WIDTH ];
 	}
 
 
 	public static function getRemainder( $version ) {
-		return self::$capacity[ $version ][ QRCAP_REMINDER ];
+		return self::$capacity[ $version ][ self::QRCAP_REMINDER ];
 	}
 
 
 	public static function getMinimumVersion( $size, $level ) {
 
-		for ( $i = 1; $i <= QRSPEC_VERSION_MAX; $i ++ ) {
-			$words = self::$capacity[ $i ][ QRCAP_WORDS ] - self::$capacity[ $i ][ QRCAP_EC ][ $level ];
+		for ( $i = 1; $i <= QRSpec::QRSPEC_VERSION_MAX; $i ++ ) {
+			$words = self::$capacity[ $i ][ self::QRCAP_WORDS ] - self::$capacity[ $i ][ self::QRCAP_EC ][ $level ];
 			if ( $words >= $size ) {
 				return $i;
 			}
@@ -130,7 +128,7 @@ class QRspec {
 	);
 
 	public static function lengthIndicator( $mode, $version ) {
-		if ( $mode == QR_MODE_STRUCTURE ) {
+		if ( $mode == QRCodeCore::QR_MODE_STRUCTURE ) {
 			return 0;
 		}
 
@@ -147,7 +145,7 @@ class QRspec {
 
 
 	public static function maximumWords( $mode, $version ) {
-		if ( $mode == QR_MODE_STRUCTURE ) {
+		if ( $mode == QRCodeCore::QR_MODE_STRUCTURE ) {
 			return 3;
 		}
 
@@ -162,7 +160,7 @@ class QRspec {
 		$bits  = self::$lengthTableBits[ $mode ][ $l ];
 		$words = ( 1 << $bits ) - 1;
 
-		if ( $mode == QR_MODE_KANJI ) {
+		if ( $mode == QRCodeCore::QR_MODE_KANJI ) {
 			$words *= 2; // the number of bytes is required
 		}
 
@@ -303,8 +301,8 @@ class QRspec {
 	 * Put an alignment marker.
 	 *
 	 * @param array $frame
-     * @param $ox : center coordinate of the pattern
-     * @param $oy : center coordinate of the pattern
+	 * @param $ox : center coordinate of the pattern
+	 * @param $oy : center coordinate of the pattern
 	 */
 	public static function putAlignmentMarker( array &$frame, $ox, $oy ) {
 		$finder = array(
@@ -367,7 +365,7 @@ class QRspec {
 	// Version information pattern (BCH coded).
 	// See Table 1 in Appendix D (pp.68) of JIS X0510:2004.
 
-	// size: [QRSPEC_VERSION_MAX - 6]
+	// size: [QRSPec::QRSPEC_VERSION_MAX - 6]
 
 	public static $versionPattern = array(
 		0x07c94,
@@ -408,7 +406,7 @@ class QRspec {
 
 
 	public static function getVersionPattern( $version ) {
-		if ( $version < 7 || $version > QRSPEC_VERSION_MAX ) {
+		if ( $version < 7 || $version > QRSPec::QRSPEC_VERSION_MAX ) {
 			return 0;
 		}
 
@@ -467,7 +465,7 @@ class QRspec {
 
 
 	public static function createFrame( $version ) {
-		$width     = self::$capacity[ $version ][ QRCAP_WIDTH ];
+		$width     = self::$capacity[ $version ][ self::QRCAP_WIDTH ];
 		$frameLine = str_repeat( "\0", $width );
 		$frame     = array_fill( 0, $width, $frameLine );
 
@@ -626,15 +624,15 @@ class QRspec {
 
 
 	public static function newFrame( $version ) {
-		if ( $version < 1 || $version > QRSPEC_VERSION_MAX ) {
+		if ( $version < 1 || $version > QRSPec::QRSPEC_VERSION_MAX ) {
 			return null;
 		}
 
 		if ( ! isset( self::$frames[ $version ] ) ) {
 
-			$fileName = QR_CACHE_DIR . 'frame_' . $version . '.dat';
+			$fileName = QRCodeCore::QR_CACHE_DIR . 'frame_' . $version . '.dat';
 
-			if ( QR_CACHEABLE ) {
+			if ( QRCodeCore::QR_CACHEABLE ) {
 				if ( file_exists( $fileName ) ) {
 					self::$frames[ $version ] = self::unserial( file_get_contents( $fileName ) );
 				} else {

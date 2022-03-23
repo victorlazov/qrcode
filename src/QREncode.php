@@ -14,10 +14,10 @@ class QREncode {
 	public $structured = 0; // not supported yet
 
 	public $level = QR_ECLEVEL_L;
-	public $hint = QR_MODE_8;
+	public $hint = QRCodeCore::QR_MODE_8;
 
 
-	public static function factory( $level = QR_ECLEVEL_L, $size = 3, $margin = 4 ) {
+	public static function factory( $level = QRCodeCore::QR_ECLEVEL_L, $size = 3, $margin = 4 ) {
 		$enc         = new QREncode();
 		$enc->size   = $size;
 		$enc->margin = $margin;
@@ -31,19 +31,19 @@ class QREncode {
 				break;
 			case 'l':
 			case 'L':
-				$enc->level = QR_ECLEVEL_L;
+				$enc->level = QRCodeCore::QR_ECLEVEL_L;
 				break;
 			case 'm':
 			case 'M':
-				$enc->level = QR_ECLEVEL_M;
+				$enc->level = QRCodeCore::QR_ECLEVEL_M;
 				break;
 			case 'q':
 			case 'Q':
-				$enc->level = QR_ECLEVEL_Q;
+				$enc->level = QRCodeCore::QR_ECLEVEL_Q;
 				break;
 			case 'h':
 			case 'H':
-				$enc->level = QR_ECLEVEL_H;
+				$enc->level = QRCodeCore::QR_ECLEVEL_H;
 				break;
 		}
 
@@ -77,14 +77,13 @@ class QREncode {
 
 		if ( $outfile !== false ) {
 			file_put_contents( $outfile, join( "\n", QRTools::binarize( $code->data ) ) );
-		} else {
-			return QRTools::binarize( $code->data );
 		}
+
+		return QRTools::binarize( $code->data );
 	}
 
-	public function encodePNG( $intext, $outfile = false, $saveandprint = false ) {
+	public function encodePNG( $intext, $outfile = false, $saveAndPrint = false ) {
 		try {
-
 			ob_start();
 			$tab = $this->encode( $intext );
 			$err = ob_get_contents();
@@ -94,14 +93,11 @@ class QREncode {
 				QRTools::log( $outfile, $err );
 			}
 
-			$maxSize = (int) ( QR_PNG_MAXIMUM_SIZE / ( count( $tab ) + 2 * $this->margin ) );
+			$maxSize = (int) ( QRCodeCore::QR_PNG_MAXIMUM_SIZE / ( count( $tab ) + 2 * $this->margin ) );
 
-			QRImage::png( $tab, $outfile, min( max( 1, $this->size ), $maxSize ), $this->margin, $saveandprint );
-
+			QRImage::png( $tab, $outfile, min( max( 1, $this->size ), $maxSize ), $this->margin, $saveAndPrint );
 		} catch ( \Exception $e ) {
-
 			QRTools::log( $outfile, $e->getMessage() );
-
 		}
 	}
 }

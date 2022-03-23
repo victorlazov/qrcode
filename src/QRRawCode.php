@@ -21,14 +21,14 @@ class QRRawCode {
 			throw new \Exception( 'null imput string' );
 		}
 
-		QRspec::getEccSpec( $input->getVersion(), $input->getErrorCorrectionLevel(), $spec );
+		QRSpec::getEccSpec( $input->getVersion(), $input->getErrorCorrectionLevel(), $spec );
 
 		$this->version    = $input->getVersion();
-		$this->b1         = QRspec::rsBlockNum1( $spec );
-		$this->dataLength = QRspec::rsDataLength( $spec );
-		$this->eccLength  = QRspec::rsEccLength( $spec );
+		$this->b1         = QRSpec::rsBlockNum1( $spec );
+		$this->dataLength = QRSpec::rsDataLength( $spec );
+		$this->eccLength  = QRSpec::rsEccLength( $spec );
 		$this->ecccode    = array_fill( 0, $this->eccLength, 0 );
-		$this->blocks     = QRspec::rsBlockNum( $spec );
+		$this->blocks     = QRSpec::rsBlockNum( $spec );
 
 		$ret = $this->init( $spec );
 		if ( $ret < 0 ) {
@@ -40,15 +40,15 @@ class QRRawCode {
 
 	
 	public function init( array $spec ) {
-		$dl = QRspec::rsDataCodes1( $spec );
-		$el = QRspec::rsEccCodes1( $spec );
+		$dl = QRSpec::rsDataCodes1( $spec );
+		$el = QRSpec::rsEccCodes1( $spec );
 		$rs = QRrs::init_rs( 8, 0x11d, 0, 1, $el, 255 - $dl - $el );
 
 
 		$blockNo = 0;
 		$dataPos = 0;
 		$eccPos  = 0;
-		for ( $i = 0; $i < QRspec::rsBlockNum1( $spec ); $i ++ ) {
+		for ( $i = 0; $i < QRSpec::rsBlockNum1( $spec ); $i ++ ) {
 			$ecc                        = array_slice( $this->ecccode, $eccPos );
 			$this->rsblocks[ $blockNo ] = new QRrsBlock( $dl, array_slice( $this->datacode, $dataPos ), $el, $ecc, $rs );
 			$this->ecccode              = array_merge( array_slice( $this->ecccode, 0, $eccPos ), $ecc );
@@ -58,19 +58,19 @@ class QRRawCode {
 			$blockNo ++;
 		}
 
-		if ( QRspec::rsBlockNum2( $spec ) == 0 ) {
+		if ( QRSpec::rsBlockNum2( $spec ) == 0 ) {
 			return 0;
 		}
 
-		$dl = QRspec::rsDataCodes2( $spec );
-		$el = QRspec::rsEccCodes2( $spec );
+		$dl = QRSpec::rsDataCodes2( $spec );
+		$el = QRSpec::rsEccCodes2( $spec );
 		$rs = QRrs::init_rs( 8, 0x11d, 0, 1, $el, 255 - $dl - $el );
 
 		if ( $rs == null ) {
 			return - 1;
 		}
 
-		for ( $i = 0; $i < QRspec::rsBlockNum2( $spec ); $i ++ ) {
+		for ( $i = 0; $i < QRSpec::rsBlockNum2( $spec ); $i ++ ) {
 			$ecc                        = array_slice( $this->ecccode, $eccPos );
 			$this->rsblocks[ $blockNo ] = new QRrsBlock( $dl, array_slice( $this->datacode, $dataPos ), $el, $ecc, $rs );
 			$this->ecccode              = array_merge( array_slice( $this->ecccode, 0, $eccPos ), $ecc );

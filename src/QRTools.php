@@ -70,20 +70,18 @@ class QRTools {
 		return $barcode_array;
 	}
 
-
 	public static function clearCache() {
 		self::$frames = [];
 	}
-
 
 	public static function buildCache() {
 		QRTools::markTime( 'before_build_cache' );
 
 		$mask = new QRMask();
-		for ( $a = 1; $a <= QRSPEC_VERSION_MAX; $a ++ ) {
-			$frame = QRspec::newFrame( $a );
-			if ( QR_IMAGE ) {
-				$fileName = QR_CACHE_DIR . 'frame_' . $a . '.png';
+		for ( $a = 1; $a <= QRSPec::QRSPEC_VERSION_MAX; $a ++ ) {
+			$frame = QRSpec::newFrame( $a );
+			if ( QRImage::QR_IMAGE ) {
+				$fileName = QRCodeCore::QR_CACHE_DIR . 'frame_' . $a . '.png';
 				QRImage::png( self::binarize( $frame ), $fileName, 1, 0 );
 			}
 
@@ -97,19 +95,17 @@ class QRTools {
 		QRTools::markTime( 'after_build_cache' );
 	}
 
-
 	public static function log( $outfile, $err ) {
-		if ( QR_LOG_DIR !== false ) {
+		if ( QRCodeCore::QR_LOG_DIR !== false ) {
 			if ( $err != '' ) {
 				if ( $outfile !== false ) {
-					file_put_contents( QR_LOG_DIR . basename( $outfile ) . '-errors.txt', date( 'Y-m-d H:i:s' ) . ': ' . $err, FILE_APPEND );
+					file_put_contents( QRCodeCore::QR_LOG_DIR . basename( $outfile ) . '-errors.txt', date( 'Y-m-d H:i:s' ) . ': ' . $err, FILE_APPEND );
 				} else {
-					file_put_contents( QR_LOG_DIR . 'errors.txt', date( 'Y-m-d H:i:s' ) . ': ' . $err, FILE_APPEND );
+					file_put_contents( QRCodeCore::QR_LOG_DIR . 'errors.txt', date( 'Y-m-d H:i:s' ) . ': ' . $err, FILE_APPEND );
 				}
 			}
 		}
 	}
-
 
 	public static function dumpMask( $frame ) {
 		$width = count( $frame );
@@ -119,7 +115,6 @@ class QRTools {
 			}
 		}
 	}
-
 
 	public static function markTime( $markerId ) {
 		list( $usec, $sec ) = explode( " ", microtime() );
@@ -131,7 +126,6 @@ class QRTools {
 
 		$GLOBALS['qr_time_bench'][ $markerId ] = $time;
 	}
-
 
 	public static function timeBenchmark() {
 		self::markTime( 'finish' );
@@ -160,7 +154,6 @@ class QRTools {
         </tfoot>
         </table>';
 	}
-
 }
 
 QRTools::markTime( 'start' );

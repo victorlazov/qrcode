@@ -30,19 +30,16 @@ namespace victorlazov\qrcode;
 class QRBitStream {
 	public $data = [];
 
-	
 	public function size() {
 		return count( $this->data );
 	}
 
-	
 	public function allocate( $setLength ) {
 		$this->data = array_fill( 0, $setLength, 0 );
 
 		return 0;
 	}
 
-	
 	public static function newFromNum( $bits, $num ) {
 		$bstream = new QRBitStream();
 		$bstream->allocate( $bits );
@@ -60,7 +57,6 @@ class QRBitStream {
 		return $bstream;
 	}
 
-	
 	public static function newFromBytes( $size, $data ) {
 		$bstream = new QRBitStream();
 		$bstream->allocate( $size * 8 );
@@ -82,7 +78,6 @@ class QRBitStream {
 		return $bstream;
 	}
 
-	
 	public function append( QRBitStream $arg ) {
 		if ( is_null( $arg ) ) {
 			return - 1;
@@ -103,7 +98,6 @@ class QRBitStream {
 		return 0;
 	}
 
-	
 	public function appendNum( $bits, $num ) {
 		if ( $bits == 0 ) {
 			return 0;
@@ -121,7 +115,6 @@ class QRBitStream {
 		return $ret;
 	}
 
-	
 	public function appendBytes( $size, $data ) {
 		if ( $size == 0 ) {
 			return 0;
@@ -139,9 +132,7 @@ class QRBitStream {
 		return $ret;
 	}
 
-	
 	public function toByte() {
-
 		$size = $this->size();
 
 		if ( $size == 0 ) {
@@ -175,6 +166,5 @@ class QRBitStream {
 
 		return $data;
 	}
-
 }
 

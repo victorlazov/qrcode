@@ -3,15 +3,13 @@
 namespace victorlazov\qrcode;
 
 class QRInput {
-
 	public $items;
 
 	private $version;
 	private $level;
 
-
 	public function __construct( $version = 0, $level = QR_ECLEVEL_L ) {
-		if ( $version < 0 || $version > QRSPEC_VERSION_MAX || $level > QR_ECLEVEL_H ) {
+		if ( $version < 0 || $version > QRSPec::QRSPEC_VERSION_MAX || $level > QRCodeCore::QR_ECLEVEL_H ) {
 			throw new \Exception( 'Invalid version no' );
 		}
 
@@ -19,14 +17,12 @@ class QRInput {
 		$this->level   = $level;
 	}
 
-
 	public function getVersion() {
 		return $this->version;
 	}
 
-
 	public function setVersion( $version ) {
-		if ( $version < 0 || $version > QRSPEC_VERSION_MAX ) {
+		if ( $version < 0 || $version > QRSPec::QRSPEC_VERSION_MAX ) {
 			throw new \Exception( 'Invalid version no' );
 		}
 
@@ -35,14 +31,12 @@ class QRInput {
 		return 0;
 	}
 
-
 	public function getErrorCorrectionLevel() {
 		return $this->level;
 	}
 
-
 	public function setErrorCorrectionLevel( $level ) {
-		if ( $level > QR_ECLEVEL_H ) {
+		if ( $level > QRCodeCore::QR_ECLEVEL_H ) {
 			throw new \Exception( 'Invalid ECLEVEL' );
 		}
 
@@ -51,11 +45,9 @@ class QRInput {
 		return 0;
 	}
 
-
 	public function appendEntry( QRInputItem $entry ) {
 		$this->items[] = $entry;
 	}
-
 
 	public function append( $mode, $size, $data ) {
 		try {
@@ -68,20 +60,19 @@ class QRInput {
 		}
 	}
 
-
 	public function insertStructuredAppendHeader( $size, $index, $parity ) {
-		if ( $size > MAX_STRUCTURED_SYMBOLS ) {
+		if ( $size > QRInputItem::MAX_STRUCTURED_SYMBOLS ) {
 			throw new \Exception( 'insertStructuredAppendHeader wrong size' );
 		}
 
-		if ( $index <= 0 || $index > MAX_STRUCTURED_SYMBOLS ) {
+		if ( $index <= 0 || $index > QRInputItem::MAX_STRUCTURED_SYMBOLS ) {
 			throw new \Exception( 'insertStructuredAppendHeader wrong index' );
 		}
 
 		$buf = array( $size, $index, $parity );
 
 		try {
-			$entry = new QRInputItem( QR_MODE_STRUCTURE, 3, buf );
+			$entry = new QRInputItem( QRCodeCore::QR_MODE_STRUCTURE, 3, $buf );
 			array_unshift( $this->items, $entry );
 
 			return 0;
@@ -94,7 +85,7 @@ class QRInput {
 		$parity = 0;
 
 		foreach ( $this->items as $item ) {
-			if ( $item->mode != QR_MODE_STRUCTURE ) {
+			if ( $item->mode != QRCodeCore::QR_MODE_STRUCTURE ) {
 				for ( $i = $item->size - 1; $i >= 0; $i -- ) {
 					$parity ^= $item->data[ $i ];
 				}
@@ -323,17 +314,17 @@ class QRInput {
 		}
 
 		switch ( $mode ) {
-			case QR_MODE_NUM:
+			case QRCodeCore::QR_MODE_NUM:
 				return self::checkModeNum( $size, $data );
 				break;
-			case QR_MODE_AN:
+			case QRCodeCore::QR_MODE_AN:
 				return self::checkModeAn( $size, $data );
 				break;
-			case QR_MODE_KANJI:
+			case QRCodeCore::QR_MODE_KANJI:
 				return self::checkModeKanji( $size, $data );
 				break;
-			case QR_MODE_8:
-			case QR_MODE_STRUCTURE:
+			case QRCodeCore::QR_MODE_8:
+			case QRCodeCore::QR_MODE_STRUCTURE:
 				return true;
 				break;
 			default:
@@ -359,7 +350,7 @@ class QRInput {
 		do {
 			$prev    = $version;
 			$bits    = $this->estimateBitStreamSize( $prev );
-			$version = QRspec::getMinimumVersion( (int) ( ( $bits + 7 ) / 8 ), $this->level );
+			$version = QRSpec::getMinimumVersion( (int) ( ( $bits + 7 ) / 8 ), $this->level );
 			if ( $version < 0 ) {
 				return - 1;
 			}
@@ -369,9 +360,9 @@ class QRInput {
 	}
 
 	public static function lengthOfCode( $mode, $version, $bits ) {
-		$payload = $bits - 4 - QRspec::lengthIndicator( $mode, $version );
+		$payload = $bits - 4 - QRSpec::lengthIndicator( $mode, $version );
 		switch ( $mode ) {
-			case QR_MODE_NUM:
+			case QRCodeCore::QR_MODE_NUM:
 				$chunks = (int) ( $payload / 10 );
 				$remain = $payload - $chunks * 10;
 				$size   = $chunks * 3;
@@ -381,7 +372,7 @@ class QRInput {
 					$size += 1;
 				}
 				break;
-			case QR_MODE_AN:
+			case QRCodeCore::QR_MODE_AN:
 				$chunks = (int) ( $payload / 11 );
 				$remain = $payload - $chunks * 11;
 				$size   = $chunks * 2;
@@ -389,18 +380,18 @@ class QRInput {
 					$size ++;
 				}
 				break;
-			case QR_MODE_8:
-			case QR_MODE_STRUCTURE:
+			case QRCodeCore::QR_MODE_8:
+			case QRCodeCore::QR_MODE_STRUCTURE:
 				$size = (int) ( $payload / 8 );
 				break;
-			case QR_MODE_KANJI:
+			case QRCodeCore::QR_MODE_KANJI:
 				$size = (int) ( ( $payload / 13 ) * 2 );
 				break;
 			default:
 				$size = 0;
 				break;
 		}
-		$maxsize = QRspec::maximumWords( $mode, $version );
+		$maxsize = QRSpec::maximumWords( $mode, $version );
 		if ( $size < 0 ) {
 			$size = 0;
 		}
@@ -440,7 +431,7 @@ class QRInput {
 				return - 1;
 			}
 
-			$ver = QRspec::getMinimumVersion( (int) ( ( $bits + 7 ) / 8 ), $this->level );
+			$ver = QRSpec::getMinimumVersion( (int) ( ( $bits + 7 ) / 8 ), $this->level );
 			if ( $ver < 0 ) {
 				throw new \Exception( 'WRONG VERSION' );
 
@@ -457,7 +448,7 @@ class QRInput {
 
 	public function appendPaddingBit( &$bstream ) {
 		$bits     = $bstream->size();
-		$maxwords = QRspec::getDataLength( $this->version, $this->level );
+		$maxwords = QRSpec::getDataLength( $this->version, $this->level );
 		$maxbits  = $maxwords * 8;
 
 		if ( $maxbits == $bits ) {
