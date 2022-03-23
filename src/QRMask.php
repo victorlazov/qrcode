@@ -159,7 +159,7 @@ class QRMask {
 
 		$fileName = QRCodeCore::QR_CACHE_DIR . 'mask_' . $maskNo . DIRECTORY_SEPARATOR . 'mask_' . $width . '_' . $maskNo . '.dat';
 
-		if ( QR_CACHEABLE ) {
+		if ( QRCodeCore::QR_CACHEABLE ) {
 			if ( file_exists( $fileName ) ) {
 				$bitMask = self::unserial( file_get_contents( $fileName ) );
 			} else {
