@@ -13,7 +13,7 @@ class QREncode {
 
 	public $structured = 0; // not supported yet
 
-	public $level = QR_ECLEVEL_L;
+	public $level = QRCodeCore::QR_ECLEVEL_L;
 	public $hint = QRCodeCore::QR_MODE_8;
 
 

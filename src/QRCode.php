@@ -159,21 +159,21 @@ class QRCode {
 	}
 
 
-	public static function png( $text, $outfile = false, $level = QR_ECLEVEL_L, $size = 3, $margin = 4, $saveAndPrint = false ) {
+	public static function png( $text, $outfile = false, $level = QRCodeCore::QR_ECLEVEL_L, $size = 3, $margin = 4, $saveAndPrint = false ) {
 		$enc = QREncode::factory( $level, $size, $margin );
 
 		$enc->encodePNG( $text, $outfile, $saveAndPrint );
 	}
 
 
-	public static function text( $text, $outfile = false, $level = QR_ECLEVEL_L, $size = 3, $margin = 4 ) {
+	public static function text( $text, $outfile = false, $level = QRCodeCore::QR_ECLEVEL_L, $size = 3, $margin = 4 ) {
 		$enc = QREncode::factory( $level, $size, $margin );
 
 		return $enc->encode( $text, $outfile );
 	}
 
 
-	public static function raw( $text, $outfile = false, $level = QR_ECLEVEL_L, $size = 3, $margin = 4 ) {
+	public static function raw( $text, $outfile = false, $level = QRCodeCore::QR_ECLEVEL_L, $size = 3, $margin = 4 ) {
 		$enc = QREncode::factory( $level, $size, $margin );
 
 		return $enc->encodeRAW( $text, $outfile );
