@@ -9,7 +9,7 @@ class QRInput {
 	private $level;
 
 	public function __construct( $version = 0, $level = QRCodeCore::QR_ECLEVEL_L ) {
-		if ( $version < 0 || $version > QRSPec::QRSPEC_VERSION_MAX || $level > QRCodeCore::QR_ECLEVEL_H ) {
+		if ( $version < 0 || $version > QRSpec::QRSPEC_VERSION_MAX || $level > QRCodeCore::QR_ECLEVEL_H ) {
 			throw new \Exception( 'Invalid version no' );
 		}
 
@@ -22,7 +22,7 @@ class QRInput {
 	}
 
 	public function setVersion( $version ) {
-		if ( $version < 0 || $version > QRSPec::QRSPEC_VERSION_MAX ) {
+		if ( $version < 0 || $version > QRSpec::QRSPEC_VERSION_MAX ) {
 			throw new \Exception( 'Invalid version no' );
 		}
 

@@ -41,7 +41,7 @@ class QRCode {
 	public $data;
 
 	public function encodeMask( QRInput $input, $mask ) {
-		if ( $input->getVersion() < 0 || $input->getVersion() > QRSPec::QRSPEC_VERSION_MAX ) {
+		if ( $input->getVersion() < 0 || $input->getVersion() > QRSpec::QRSPEC_VERSION_MAX ) {
 			throw new \Exception( 'wrong version' );
 		}
 		if ( $input->getErrorCorrectionLevel() > QRCodeCore::QR_ECLEVEL_H ) {

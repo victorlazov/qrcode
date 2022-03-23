@@ -78,7 +78,7 @@ class QRTools {
 		QRTools::markTime( 'before_build_cache' );
 
 		$mask = new QRMask();
-		for ( $a = 1; $a <= QRSPec::QRSPEC_VERSION_MAX; $a ++ ) {
+		for ( $a = 1; $a <= QRSpec::QRSPEC_VERSION_MAX; $a ++ ) {
 			$frame = QRSpec::newFrame( $a );
 			if ( QRImage::QR_IMAGE ) {
 				$fileName = QRCodeCore::QR_CACHE_DIR . 'frame_' . $a . '.png';

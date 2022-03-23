@@ -365,7 +365,7 @@ class QRSpec {
 	// Version information pattern (BCH coded).
 	// See Table 1 in Appendix D (pp.68) of JIS X0510:2004.
 
-	// size: [QRSPec::QRSPEC_VERSION_MAX - 6]
+	// size: [QRSpec::QRSPEC_VERSION_MAX - 6]
 
 	public static $versionPattern = array(
 		0x07c94,
@@ -406,7 +406,7 @@ class QRSpec {
 
 
 	public static function getVersionPattern( $version ) {
-		if ( $version < 7 || $version > QRSPec::QRSPEC_VERSION_MAX ) {
+		if ( $version < 7 || $version > QRSpec::QRSPEC_VERSION_MAX ) {
 			return 0;
 		}
 
@@ -624,7 +624,7 @@ class QRSpec {
 
 
 	public static function newFrame( $version ) {
-		if ( $version < 1 || $version > QRSPec::QRSPEC_VERSION_MAX ) {
+		if ( $version < 1 || $version > QRSpec::QRSPEC_VERSION_MAX ) {
 			return null;
 		}
 
