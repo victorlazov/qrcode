@@ -27,8 +27,13 @@
 
 namespace victorlazov\qrcode;
 
-class QRstr {
-	public static function set( &$srctab, $x, $y, $repl, $replLen = false ) {
-		$srctab[ $y ] = substr_replace( $srctab[ $y ], ( $replLen !== false ) ? substr( $repl, 0, $replLen ) : $repl, $x, ( $replLen !== false ) ? $replLen : strlen( $repl ) );
+class QRStr {
+	public static function set( &$srcTab, $x, $y, $repl, $replLen = false ) {
+		$srcTab[ $y ] = substr_replace(
+			$srcTab[ $y ],
+			( $replLen !== false ) ? substr( $repl, 0, $replLen ) : $repl,
+			$x,
+			( $replLen !== false ) ? $replLen : strlen( $repl )
+		);
 	}
 }

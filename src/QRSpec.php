@@ -317,7 +317,7 @@ class QRSpec {
 		$xStart = $ox - 2;
 
 		for ( $y = 0; $y < 5; $y ++ ) {
-			QRstr::set( $frame, $xStart, $yStart + $y, $finder[ $y ] );
+			QRStr::set( $frame, $xStart, $yStart + $y, $finder[ $y ] );
 		}
 	}
 
@@ -459,7 +459,7 @@ class QRSpec {
 		);
 
 		for ( $y = 0; $y < 7; $y ++ ) {
-			QRstr::set( $frame, $ox, $oy + $y, $finder[ $y ] );
+			QRStr::set( $frame, $ox, $oy + $y, $finder[ $y ] );
 		}
 	}
 
@@ -486,14 +486,14 @@ class QRSpec {
 
 		$setPattern = str_repeat( "\xc0", 8 );
 
-		QRstr::set( $frame, 0, 7, $setPattern );
-		QRstr::set( $frame, $width - 8, 7, $setPattern );
-		QRstr::set( $frame, 0, $width - 8, $setPattern );
+		QRStr::set( $frame, 0, 7, $setPattern );
+		QRStr::set( $frame, $width - 8, 7, $setPattern );
+		QRStr::set( $frame, 0, $width - 8, $setPattern );
 
 		// Format info
 		$setPattern = str_repeat( "\x84", 9 );
-		QRstr::set( $frame, 0, 8, $setPattern );
-		QRstr::set( $frame, $width - 8, 8, $setPattern, 8 );
+		QRStr::set( $frame, 0, 8, $setPattern );
+		QRStr::set( $frame, $width - 8, 8, $setPattern, 8 );
 
 		$yOffset = $width - 8;
 
